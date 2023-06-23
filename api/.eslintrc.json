@@ -1,0 +1,41 @@
+{
+  "root": true,
+  "env": { "node": true, "es2023": true },
+  "parserOptions": { "ecmaVersion": 2023, "sourceType": "module" },
+  "plugins": ["import"],
+  "extends": ["eslint:recommended", "plugin:import/recommended", "prettier"],
+  "settings": { "import/resolver": { "node": { "extensions": [".js"] } } },
+  "rules": {
+    "no-console": "error",
+    "no-unused-vars": [
+      "error",
+      { "argsIgnorePattern": "^_", "ignoreRestSiblings": true }
+    ],
+    "eqeqeq": ["error", "always"],
+    "no-var": "error",
+    "prefer-const": "error",
+    "object-shorthand": "error",
+    "import/order": [
+      "error",
+      {
+        "groups": ["builtin", "external", "internal", "parent", "sibling"],
+        "newlines-between": "always"
+      }
+    ],
+    "import/extensions": ["error", "ignorePackages"],
+    "import/no-extraneous-dependencies": [
+      "error",
+      { "devDependencies": ["tests/**", "scripts/**"] }
+    ]
+  },
+  "overrides": [
+    {
+      "files": ["src/lib/logger.js"],
+      "rules": { "no-console": "off" }
+    },
+    {
+      "files": ["tests/**/*.js"],
+      "env": { "node": true }
+    }
+  ]
+}
