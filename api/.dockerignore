@@ -1,0 +1,15 @@
+node_modules
+npm-debug.log*
+coverage
+tests
+.env
+.env.*
+!.env.sample
+.eslintrc.json
+.eslintignore
+.prettierrc.json
+.prettierignore
+Dockerfile
+.dockerignore
+.git
+.DS_Store

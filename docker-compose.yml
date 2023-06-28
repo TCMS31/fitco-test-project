@@ -1,0 +1,52 @@
+name: fitco-test-project
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-fitco}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-fitco}
+      POSTGRES_DB: ${POSTGRES_DB:-fitco}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test:
+        ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-fitco} -d ${POSTGRES_DB:-fitco}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+  api:
+    build:
+      context: ./api
+    environment:
+      NODE_ENV: production
+      PORT: "8700"
+      CLIENT_URL: ${CLIENT_URL:-http://localhost:8701}
+      DB_DIALECT: postgres
+      DB_URL: postgres://${POSTGRES_USER:-fitco}:${POSTGRES_PASSWORD:-fitco}@db:5432/${POSTGRES_DB:-fitco}
+      DB_AUTO_SYNC: "true"
+      SEED_ON_BOOT: ${SEED_ON_BOOT:-false}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+    ports:
+      - "8700:8700"
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  client:
+    build:
+      context: ./client
+      args:
+        # Baked in at build time: CRA inlines REACT_APP_* into the bundle.
+        REACT_APP_API_URL: ${PUBLIC_API_URL:-http://localhost:8700}
+    ports:
+      - "8701:8080"
+    depends_on:
+      - api
+    restart: unless-stopped
+
+volumes:
+  db-data:
