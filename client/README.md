@@ -2,8 +2,8 @@
 
 React 18 single-page client for the user-management API in [`../api`](../api).
 
-See the [project README](../README.md) for the architecture, the diagrams and
-the full quickstart. In short:
+See the [project README](../README.md) for the architecture, the sequence
+diagram and the full quickstart. In short:
 
 ```bash
 npm install
